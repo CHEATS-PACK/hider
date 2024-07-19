@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Рандомизация ключей</title>
+</head>
+<body>
+    <div id="randomKey"></div>
+
+    <script>
+        function generateKey() {
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let key = '';
+            const keyLength = 16; // Длина ключа
+
+            for (let i = 0; i < keyLength; i++) {
+                const randomIndex = Math.floor(Math.random() * characters.length);
+                key += characters[randomIndex];
+            }
+
+            return key;
+        }
+
+        function updateKey() {
+            const now = Date.now();
+            const savedTime = localStorage.getItem('keyGeneratedTime');
+            const savedKey = localStorage.getItem('randomKey');
+
+            if (!savedTime || (now - savedTime) >= 60000) {
+                const newKey = generateKey();
+                localStorage.setItem('randomKey', newKey);
+                localStorage.setItem('keyGeneratedTime', now);
+                document.getElementById('randomKey').innerText = newKey;
+            } else {
+                document.getElementById('randomKey').innerText = savedKey;
+            }
+        }
+
+        // Инициализация и обновление ключа каждую минуту
+        updateKey();
+        setInterval(updateKey, 60000);
+    </script>
+</body>
+</html>
